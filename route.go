@@ -8,11 +8,11 @@ import (
 type Route struct {
 	Methods []string
 	Path    string
-	Handler func(context.Context, Payload) (interface{}, int, error)
+	Handler func(context.Context, Payload) *HandlerReturn
 }
 
 // NewRoute is the entry point for making a new route
-func NewRoute(handler func(context.Context, Payload) (interface{}, int, error), path string, methods ...string) *Route {
+func NewRoute(handler func(context.Context, Payload) *HandlerReturn, path string, methods ...string) *Route {
 	r := &Route{
 		Methods: methods,
 		Path:    path,
