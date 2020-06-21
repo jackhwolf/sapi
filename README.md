@@ -1,5 +1,5 @@
 # sapi
-a simple router to build **S**erverless **API**s on AWS application load balancer and lambda
+a simple router to build **S**erverless golang **API**s on AWS application load balancer and lambda
 
 # defining handlers
 all handlers must have the signature 
