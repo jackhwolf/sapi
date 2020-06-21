@@ -6,11 +6,13 @@ import (
 	"testing"
 )
 
+// TestNewRouter
 func TestNewRouter(t *testing.T) {
 	// create new router with url prefix `/prefix`
 	NewRouter("/prefix/")
 }
 
+// TestAddPath
 func TestAddPath(t *testing.T) {
 	// create new router with url prefix `/prefix`
 	rtr := NewRouter("/prefix/")
