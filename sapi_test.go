@@ -25,5 +25,4 @@ func TestAddPath(t *testing.T) {
 		}{"Hello", 123}
 		return &HandlerReturn{sample, 200, nil}
 	}, "/sample", http.MethodGet)
-
 }
