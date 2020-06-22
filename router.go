@@ -38,7 +38,7 @@ func (rtr *Router) LookupRoute(method, path string) (*Route, error) {
 }
 
 // AddRoute will try to add a route
-func (rtr *Router) AddRoute(handler func(context.Context, Payload) (interface{}, int, error), path string, methods ...string) error {
+func (rtr *Router) AddRoute(handler func(context.Context, Payload) *HandlerReturn, path string, methods ...string) error {
 	path = rtr.Prefix + path
 	for _, m := range methods {
 		_, err := rtr.LookupRoute(m, path)
@@ -61,20 +61,20 @@ func (rtr *Router) HandleLambda(ctx context.Context, payload Payload) (Response,
 		response.Body = err.Error()
 		return *response, nil
 	}
-	respBody, respStatusInt, respErr := route.Handler(ctx, payload)
+	handlerReturn := route.Handler(ctx, payload)
 	var respBodyStr string
-	if respErr != nil {
-		response.Body = respErr.Error()
+	if handlerReturn.Err != nil {
+		response.Body = handlerReturn.Err.Error()
 	} else {
-		respBodyByte, err := json.Marshal(respBody)
+		respBodyByte, err := json.Marshal(handlerReturn.Body)
 		respBodyStr = string(respBodyByte)
 		if err != nil {
-			respStatusInt = http.StatusInternalServerError
-			respBodyStr = http.StatusText(respStatusInt)
+			handlerReturn.StatusCode = http.StatusInternalServerError
+			respBodyStr = http.StatusText(handlerReturn.StatusCode)
 		}
 	}
-	response.StatusCode = respStatusInt
-	response.StatusDescription = http.StatusText(respStatusInt)
+	response.StatusCode = handlerReturn.StatusCode
+	response.StatusDescription = http.StatusText(response.StatusCode)
 	response.Body = respBodyStr
 	return *response, nil
 }
