@@ -4,7 +4,7 @@ a simple router to build **S**erverless golang **API**s on AWS application load 
 # defining handlers
 all handlers must have the signature 
 ```
-func(context.Context, sapi.Payload) (interface{}, int, error)
+func(context.Context, sapi.Payload) *HandlerReturn
 ```
 where the `interface{}` should be json.Marshal-able, the `int` is an http status code
 
