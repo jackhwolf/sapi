@@ -11,7 +11,7 @@ where `HandlerReturn` is defined as
 type HandlerReturn struct {
 	Body       interface{}
 	StatusCode int
-	Err        error
+	Err        error	
 }
 ```
 
