@@ -6,7 +6,14 @@ all handlers must have the signature
 ```
 func(context.Context, sapi.Payload) *HandlerReturn
 ```
-where the `interface{}` should be json.Marshal-able, the `int` is an http status code
+where `HandlerReturn` is defined as 
+```
+type HandlerReturn struct {
+	Body       interface{}
+	StatusCode int
+	Err        error
+}
+```
 
 # example
 ```
