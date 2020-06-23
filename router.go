@@ -16,10 +16,10 @@ type Router struct {
 
 // NewRouter is the entry point for making a new router
 func NewRouter(pref string) *Router {
-	pref = strings.TrimRight(pref, "/")
+	trimPref := strings.TrimRight(pref, "/")
 	rm := make(map[string]*Route, 0)
 	r := &Router{
-		Prefix:   pref,
+		Prefix:   trimPref,
 		RouteMap: rm,
 	}
 	return r
