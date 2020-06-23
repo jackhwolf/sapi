@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -65,6 +66,8 @@ func (rtr *Router) AddRoute(handler func(context.Context, Payload) *HandlerRetur
 // HandleLambda should be passed to lambda.start as the entry point for requests
 func (rtr *Router) HandleLambda(ctx context.Context, payload Payload) (Response, error) {
 	response := DefaultResponse()
+
+	log.Println("***************" + payload.HTTPMethod)
 
 	route, err := rtr.LookupRoute(payload.HTTPMethod, payload.Path)
 	if err != nil {
