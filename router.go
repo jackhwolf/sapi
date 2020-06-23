@@ -45,9 +45,10 @@ func (rtr *Router) addRoute(handler func(context.Context, Payload) *HandlerRetur
 	path = rtr.Prefix + path
 	_, err := rtr.LookupRoute(method, path)
 	if err != nil {
-		return errors.New(method + ":" + path + " already defined")
+		return errors.New(method + " " + path + " already defined")
 	}
-	rtr.RouteMap[path] = NewRoute(handler, path, method)
+	key := rtr.makeMethodPathKey(method, path)
+	rtr.RouteMap[key] = NewRoute(handler, path, method)
 	return nil
 }
 
@@ -63,11 +64,16 @@ func (rtr *Router) AddRoute(handler func(context.Context, Payload) *HandlerRetur
 	return nil
 }
 
+func (rtr *Router) logHit(payload Payload) {
+	log.Println(payload.HTTPMethod, payload.Path)
+}
+
 // HandleLambda should be passed to lambda.start as the entry point for requests
 func (rtr *Router) HandleLambda(ctx context.Context, payload Payload) (Response, error) {
-	response := DefaultResponse()
 
-	log.Println("***************" + payload.HTTPMethod)
+	rtr.logHit(payload)
+
+	response := DefaultResponse()
 
 	route, err := rtr.LookupRoute(payload.HTTPMethod, payload.Path)
 	if err != nil {
