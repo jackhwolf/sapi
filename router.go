@@ -52,17 +52,17 @@ func (rtr *Router) AddRoute(handler func(context.Context, Payload) *HandlerRetur
 
 // HandleLambda should be passed to lambda.start as the entry point for requests
 func (rtr *Router) HandleLambda(ctx context.Context, payload Payload) (Response, error) {
-	response := &Response{}
-	response.Headers.ContentType = "text/html"
-	response.StatusCode = http.StatusBadRequest
-	response.StatusDescription = http.StatusText(http.StatusBadRequest)
+	response := DefaultResponse()
+
 	route, err := rtr.LookupRoute(payload.HTTPMethod, payload.Path)
 	if err != nil {
 		response.Body = err.Error()
 		return *response, nil
 	}
+
 	handlerReturn := route.Handler(ctx, payload)
 	var respBodyStr string
+
 	if handlerReturn.Err != nil {
 		response.Body = handlerReturn.Err.Error()
 	} else {
@@ -75,6 +75,7 @@ func (rtr *Router) HandleLambda(ctx context.Context, payload Payload) (Response,
 			response.Headers.ContentType = "application/json"
 		}
 	}
+
 	response.StatusCode = handlerReturn.StatusCode
 	response.StatusDescription = http.StatusText(response.StatusCode)
 	response.Body = respBodyStr
