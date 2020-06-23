@@ -71,6 +71,8 @@ func (rtr *Router) HandleLambda(ctx context.Context, payload Payload) (Response,
 		if err != nil {
 			handlerReturn.StatusCode = http.StatusInternalServerError
 			respBodyStr = http.StatusText(handlerReturn.StatusCode)
+		} else {
+			response.Headers.ContentType = "application/json"
 		}
 	}
 	response.StatusCode = handlerReturn.StatusCode
