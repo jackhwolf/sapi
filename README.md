@@ -4,7 +4,7 @@ a simple router to build **S**erverless golang **API**s on AWS application load 
 # defining handlers
 all handlers must have the signature 
 ```
-func(context.Context, sapi.Payload) *HandlerReturn
+func(context.Context, sapi.Payload) *sapi.HandlerReturn
 ```
 where `HandlerReturn` is defined as 
 ```
@@ -33,7 +33,7 @@ func main() {
 	rtr := sapi.NewRouter("/prefix/")
 
 	// assign sampleData function to GET /prefix/sample
-	rtr.AddRoute(func(ctx context.Context, payload Payload) *sapi.HandlerReturn {
+	rtr.AddRoute(func(ctx context.Context, payload sapi.Payload) *sapi.HandlerReturn {
 		sample := struct {
 			Message string
 			Time    int
