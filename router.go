@@ -25,28 +25,40 @@ func NewRouter(pref string) *Router {
 	return r
 }
 
+func (rtr *Router) makeMethodPathKey(method, path string) string {
+	return method + ":" + path
+}
+
 // LookupRoute will lookup the requested route
 func (rtr *Router) LookupRoute(method, path string) (*Route, error) {
-	routeMapEntry, routeMapOk := rtr.RouteMap[path]
+	key := rtr.makeMethodPathKey(method, path)
+	routeMapEntry, routeMapOk := rtr.RouteMap[key]
 	if !routeMapOk {
-		return &Route{}, errors.New(path + " not defined")
-	}
-	if !routeMapEntry.RouteHasMethod(method) {
-		return &Route{}, errors.New(method + " not defined for path " + path)
+		return &Route{}, errors.New(method + " " + path + " not defined")
 	}
 	return routeMapEntry, nil
+}
+
+// addRoute will try to add a route
+func (rtr *Router) addRoute(handler func(context.Context, Payload) *HandlerReturn, path string, method string) error {
+	path = rtr.Prefix + path
+	_, err := rtr.LookupRoute(method, path)
+	if err != nil {
+		return errors.New(method + ":" + path + " already defined")
+	}
+	rtr.RouteMap[path] = NewRoute(handler, path, method)
+	return nil
 }
 
 // AddRoute will try to add a route
 func (rtr *Router) AddRoute(handler func(context.Context, Payload) *HandlerReturn, path string, methods ...string) error {
 	path = rtr.Prefix + path
 	for _, m := range methods {
-		_, err := rtr.LookupRoute(m, path)
-		if err == nil {
-			return errors.New(m + ":" + path + " already defined")
+		err := rtr.addRoute(handler, path, m)
+		if err != nil {
+			return err
 		}
 	}
-	rtr.RouteMap[path] = NewRoute(handler, path, methods...)
 	return nil
 }
 
