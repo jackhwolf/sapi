@@ -16,7 +16,7 @@ type HandlerReturn struct {
 ```
 
 # example
-Check out the (examples repo)[https://github.com/jackhwolf/sapi-examples]
+Check out the [examples repo](https://github.com/jackhwolf/sapi-examples)
 ```
 package main
 
