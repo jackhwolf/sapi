@@ -44,7 +44,7 @@ func (rtr *Router) LookupRoute(method, path string) (*Route, error) {
 func (rtr *Router) addRoute(handler func(context.Context, Payload) *HandlerReturn, path string, method string) error {
 	path = rtr.Prefix + path
 	_, err := rtr.LookupRoute(method, path)
-	if err != nil {
+	if err == nil {
 		return errors.New(method + " " + path + " already defined")
 	}
 	key := rtr.makeMethodPathKey(method, path)
