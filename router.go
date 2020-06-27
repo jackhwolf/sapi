@@ -54,7 +54,6 @@ func (rtr *Router) addRoute(handler func(context.Context, Payload) *HandlerRetur
 
 // AddRoute will try to add a route
 func (rtr *Router) AddRoute(handler func(context.Context, Payload) *HandlerReturn, path string, methods ...string) error {
-	path = rtr.Prefix + path
 	for _, m := range methods {
 		err := rtr.addRoute(handler, path, m)
 		if err != nil {
